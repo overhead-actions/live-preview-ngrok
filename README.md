@@ -1,12 +1,29 @@
 # live-preview
 
-### Authors
+This project aims to provide a public/live URL of the application under development using [ngrok](https://ngrok.com/).
 
- - Arthur Diniz <arthurbdiniz@gmail.com>
- - Victor Moura <victor_cmoura@hotmail.com>
+The workflow can facilitate simple front-end verification tests to more complex tests including API and back-end services.
 
- ```yml
- name: Live Preview
+To use it, you must have the project [Dockerized](https://docs.docker.com/) and if you have more than one service, add a [docker-compose](https://docs.docker.com/compose/) file with the communication rules between each service.
+
+As a demo we created a simple [Dockerfile](./Dockerfile) with nginx with a [static html](./static/index.html) page.
+
+To enable the publication of the live URL, the [ngrok](https://ngrok.com/) tool was used, which creates a tunnel between the containers running inside the GitHub runners. Therefore, it is necessary to [login](https://dashboard.ngrok.com/signup) to the ngrok website and generate an auth token for it's use, adding as secret into GitHub repository.
+
+## Secrets
+
+- NGROK_AUTH_TOKEN
+
+## Authors
+
+ - Arthur Diniz: <arthurbdiniz@gmail.com>
+ - Victor Moura: <victor_cmoura@hotmail.com>
+
+
+## Workflow
+
+```yml
+name: Live Preview
 
 on: pull_request
 
@@ -21,11 +38,11 @@ jobs:
         run: docker-compose up -d
 
       - name: Start tunnel
-        uses: overhead-actions/live-preview@readme-authors
+        uses: overhead-actions/live-preview@main
         with:
           protocol: http
           port: 4000
-          ngrok_authtoken: ${{ secrets.NGROK_AUTHTOKEN }}
+          ngrok_auth_token: ${{ secrets.NGROK_AUTH_TOKEN }}
 
       - name: Get URL
         id: vars

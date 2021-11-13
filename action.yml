@@ -12,7 +12,7 @@ inputs:
   port:
     description: 'The port to forward traffic to.'
     required: true
-  ngrok_authtoken:
+  ngrok_auth_token:
     description: 'Ngrok authorization token.'
     required: true
 
@@ -23,7 +23,7 @@ runs:
       shell: bash
     - run: unzip -qq ngrok-stable-linux-amd64.zip
       shell: bash
-    - run: ./ngrok authtoken ${{ inputs.ngrok_authtoken }}
+    - run: ./ngrok authtoken ${{ inputs.ngrok_auth_token }}
       shell: bash
     - run: ./ngrok ${{ inputs.protocol }} ${{ inputs.port }} &
       shell: bash
