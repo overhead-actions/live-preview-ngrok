@@ -1,0 +1,22 @@
+name: Default
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  default:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Start services
+        run: docker-compose up -d
+
+      - uses: apogiatzis/ngrok-tunneling-action@master
+        with:
+          timeout: 1h
+          port: 4000
+          ngrok_authtoken: ${{ secrets.NGROK_AUTHTOKEN }}
