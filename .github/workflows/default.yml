@@ -1,9 +1,6 @@
 name: Default
 
-on:
-  push:
-    branches:
-      - main
+on: pull_request
 
 jobs:
   default:
@@ -15,8 +12,19 @@ jobs:
       - name: Start services
         run: docker-compose up -d
 
-      - uses: apogiatzis/ngrok-tunneling-action@master
+      - uses: overhead-actions/live-preview@main
+        id: vars
         with:
-          timeout: 1h
+          protocol: http
           port: 4000
           ngrok_authtoken: ${{ secrets.NGROK_AUTHTOKEN }}
+
+      - name: Comment PR
+        uses: unsplash/comment-on-pr@v1.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: 'Live preview URL: ${{ steps.vars.outputs.url }}'
+          check_for_duplicate_msg: false
+
+      - run: sleep 300
