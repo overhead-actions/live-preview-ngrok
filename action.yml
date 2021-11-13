@@ -7,17 +7,14 @@ branding:
 
 inputs:
   protocol:
-    description: 'The protocol to forward traffic to'
+    description: 'The protocol to forward traffic to.'
     default: http
   port:
-    description: 'The port to forward traffic to'
+    description: 'The port to forward traffic to.'
     required: true
   ngrok_authtoken:
-    description: 'Ngrok authorization token'
+    description: 'Ngrok authorization token.'
     required: true
-outputs:
-  url:
-    description: 'Live preview URL.'
 
 runs:
   using: "composite"
@@ -29,6 +26,4 @@ runs:
     - run: ./ngrok authtoken ${{ inputs.ngrok_authtoken }}
       shell: bash
     - run: ./ngrok ${{ inputs.protocol }} ${{ inputs.port }} &
-      shell: bash
-    - run: echo "::set-output name=url::$(python3 get_url.py)"
       shell: bash
