@@ -1,4 +1,4 @@
-name: Default
+name: Live Preview
 
 on: pull_request
 
@@ -12,12 +12,16 @@ jobs:
       - name: Start services
         run: docker-compose up -d
 
-      - uses: overhead-actions/live-preview@main
-        id: vars
+      - name: Start tunnel
+        uses: overhead-actions/live-preview@readme-authors
         with:
           protocol: http
           port: 4000
           ngrok_authtoken: ${{ secrets.NGROK_AUTHTOKEN }}
+
+      - name: Get URL
+        id: vars
+        run: echo "::set-output name=url::$(curl -s localhost:4040/api/tunnels | jq -r .tunnels[0].public_url)"
 
       - name: Comment PR
         uses: unsplash/comment-on-pr@v1.3.0
@@ -27,4 +31,5 @@ jobs:
           msg: 'Live preview URL: ${{ steps.vars.outputs.url }}'
           check_for_duplicate_msg: false
 
-      - run: sleep 300
+      - name: Wait
+        run: sleep 300
